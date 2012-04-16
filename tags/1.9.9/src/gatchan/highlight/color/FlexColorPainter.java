@@ -1,23 +1,23 @@
 /*
- * jEdit - Programmer's Text Editor
- * :tabSize=8:indentSize=8:noTabs=false:
- * :folding=explicit:collapseFolds=1:
- *
- * Copyright © 2010 Matthieu Casanova
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or any later version.
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- */
+* jEdit - Programmer's Text Editor
+* :tabSize=8:indentSize=8:noTabs=false:
+* :folding=explicit:collapseFolds=1:
+*
+* Copyright © 2010 Matthieu Casanova
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or any later version.
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
 
 package gatchan.highlight.color;
 
@@ -33,19 +33,19 @@ import java.io.IOException;
 import java.io.StringReader;
 
 /**
- * @author Matthieu Casanova
- */
+* @author Matthieu Casanova
+*/
 public class FlexColorPainter extends TextAreaExtension
 {
 	public static final int MAX_LINE_LENGTH = 10000;
 	private final TextArea textArea;
 	private final Point point = new Point();
-
+	
 	public FlexColorPainter(TextArea textArea)
 	{
 		this.textArea = textArea;
 	}
-
+	
 	//{{{ paintScreenLineRange() method
 	@Override
 	public void paintScreenLineRange(Graphics2D gfx, int firstLine, int lastLine, int[] physicalLines, int[] start, int[] end, int y, int lineHeight)
@@ -53,19 +53,19 @@ public class FlexColorPainter extends TextAreaExtension
 		if (jEdit.getBooleanProperty(HighlightOptionPane.PROP_HIGHLIGHT_COLORS))
 			super.paintScreenLineRange(gfx, firstLine, lastLine, physicalLines, start, end, y, lineHeight);
 	} //}}}
-
+	
 	@Override
 	public void paintValidLine(Graphics2D gfx, int screenLine, int physicalLine, int start, int end, int y)
 	{
 		JEditBuffer buffer = textArea.getBuffer();
 		int lineStart = buffer.getLineStartOffset(physicalLine);
 		int length = buffer.getLineLength(physicalLine);
-
+		
 		int startOffset = textArea.getLineStartOffset(physicalLine);
 		int endOffset = textArea.getLineEndOffset(physicalLine);
 		int screenToPhysicalOffset = start - startOffset;
-
-
+		
+		
 		int l = length - screenToPhysicalOffset - endOffset + end;
 		if (l > MAX_LINE_LENGTH)
 			l = MAX_LINE_LENGTH;
@@ -73,15 +73,17 @@ public class FlexColorPainter extends TextAreaExtension
 			l);
 		if (lineContent.length() == 0)
 			return;
-
-
+		
+		
 		FlexColorScanner flexColor = new FlexColorScanner(new StringReader(lineContent));
 		try
 		{
 			ColorToken token = flexColor.yylex();
 			while (token != null)
 			{
-				paint(token, gfx, physicalLine, y);
+				// funa edit
+				// paint(token, gfx, physicalLine, y);
+				paint(token, gfx, screenLine, physicalLine, start, end, y);
 				try
 				{
 					token = flexColor.yylex();
@@ -96,23 +98,37 @@ public class FlexColorPainter extends TextAreaExtension
 		{
 			Log.log(Log.ERROR, this, e);
 		}
-
+		
 	}
-
+	
+	// edit funa
+	// private void paint(ColorToken token,
+	// Graphics2D gfx,
+	// int physicalLine,
+	// int y)
 	private void paint(ColorToken token,
 				Graphics2D gfx,
+				int screenLine,
 				int physicalLine,
+				int start,
+				int end,
 				int y)
 	{
-		Point p = textArea.offsetToXY(physicalLine, token.getStart(), point);
+		// edit funa
+		int startOffset = start + token.getStart();
+		int endOffset = start + token.getEnd();
+		Point p = textArea.offsetToXY(physicalLine, startOffset, point);
+		// Point p = textArea.offsetToXY(physicalLine, token.getStart(), point);
 		if (p == null)
 		{
 			// The start offset was not visible
 			return;
 		}
 		int startX = p.x;
-
-		p = textArea.offsetToXY(physicalLine, token.getEnd(), point);
+		
+		// edit funa
+		// p = textArea.offsetToXY(physicalLine, token.getEnd(), point);
+		p = textArea.offsetToXY(physicalLine, endOffset, point);
 		if (p == null)
 		{
 			// The end offset was not visible
@@ -123,16 +139,16 @@ public class FlexColorPainter extends TextAreaExtension
 		Composite oldComposite = gfx.getComposite();
 		gfx.setColor(token.getColor());
 		FontMetrics fm = textArea.getPainter().getFontMetrics();
-//		gfx.fillRect(startX, y, endX - startX, fm.getHeight() - 1);
-
+		//		gfx.fillRect(startX, y, endX - startX, fm.getHeight() - 1);
+		
 		int y2 = y + fm.getHeight() - 2;
 		int y3 = y + fm.getHeight() - 1;
 		gfx.drawLine(startX, y2, endX, y2);
 		gfx.drawLine(startX, y3, endX, y3);
-
-
-
+		
+		
+		
 		gfx.setColor(oldColor);
 		gfx.setComposite(oldComposite);
-	} //}}}
+		} //}}}
 }
