@@ -115,9 +115,11 @@ public class FlexColorPainter extends TextAreaExtension
 				int y)
 	{
 		// edit funa
-		int startOffset = start + token.getStart();
-		int endOffset = start + token.getEnd();
-		Point p = textArea.offsetToXY(physicalLine, startOffset, point);
+		
+		int phycialLineStartOffset = textArea.getLineStartOffset(physicalLine);
+		int screenStartOffset = start + token.getStart();
+		int screenEndOffset = start + token.getEnd();
+		Point p = textArea.offsetToXY(physicalLine, screenStartOffset - phycialLineStartOffset, point);
 		// Point p = textArea.offsetToXY(physicalLine, token.getStart(), point);
 		if (p == null)
 		{
@@ -128,7 +130,7 @@ public class FlexColorPainter extends TextAreaExtension
 		
 		// edit funa
 		// p = textArea.offsetToXY(physicalLine, token.getEnd(), point);
-		p = textArea.offsetToXY(physicalLine, endOffset, point);
+		p = textArea.offsetToXY(physicalLine, screenEndOffset - phycialLineStartOffset, point);
 		if (p == null)
 		{
 			// The end offset was not visible
