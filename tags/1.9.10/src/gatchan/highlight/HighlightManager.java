@@ -118,4 +118,7 @@ public interface HighlightManager extends CaretListener
     //{{{ isHighlightSelection() method
     boolean isHighlightSelection() //}}}
             ;
+            
+  // funa edit
+   public void reload();
 }

@@ -579,4 +579,9 @@ public class HighlightPlugin extends EditPlugin
 			uninitView(view);
 		}
 	} //}}}
+	
+	// funa edit
+	public void reload(){
+		highlightManager.reload();
+	}
 }
