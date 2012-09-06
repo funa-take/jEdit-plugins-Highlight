@@ -27,6 +27,7 @@ import org.gjt.sp.jedit.View;
 import org.gjt.sp.jedit.buffer.JEditBuffer;
 import org.gjt.sp.jedit.search.SearchMatcher;
 import org.gjt.sp.jedit.textarea.JEditTextArea;
+import org.gjt.sp.jedit.textarea.TextArea;
 import org.gjt.sp.util.IntegerArray;
 
 import javax.swing.*;
@@ -41,6 +42,7 @@ import java.awt.event.MouseEvent;
 public class HighlightOverview extends JPanel implements HighlightChangeListener
 {
 	private final IntegerArray items;
+	private int count;
 
 	private final JEditTextArea textArea;
 
@@ -117,6 +119,7 @@ public class HighlightOverview extends JPanel implements HighlightChangeListener
 				break;
 			offset = buffer.getLineStartOffset(nextLine);
 		}
+		count = counter;
 		View view = textArea.getView();
 		if (view.isActive())
 		{
