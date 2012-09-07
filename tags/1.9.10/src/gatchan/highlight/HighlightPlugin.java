@@ -581,13 +581,13 @@ public class HighlightPlugin extends EditPlugin
 	} //}}}
 	
 	// funa edit
-	public static void reload(){
+	public static void load(){
 		File file = HighlightSelectFile.getInstance().showSelectDialog();
 		if (file == null){
 			return;
 		}
 		if (file.exists() && file.canRead()){
-			((HighlightManagerTableModel)highlightManager).reload(file);
+			((HighlightManagerTableModel)highlightManager).load(file);
 			jEdit.getActiveView().getStatus().setMessage("Load : " + file );
 		}
 	}

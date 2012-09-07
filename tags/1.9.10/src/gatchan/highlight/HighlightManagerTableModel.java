@@ -827,7 +827,7 @@ public class HighlightManagerTableModel extends AbstractTableModel implements Hi
 	
 	
 	// funa edit start
-	public void reload(File file){
+	public void load(File file){
 		removeAll();
 		if (file != null && file.exists())
 		{
