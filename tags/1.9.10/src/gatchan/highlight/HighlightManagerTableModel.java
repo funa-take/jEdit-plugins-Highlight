@@ -422,7 +422,7 @@ public class HighlightManagerTableModel extends AbstractTableModel implements Hi
 	} //}}}
 	
 	//{{{ save() method
-	private void save()
+	public void save()
 	{
 		if (highlights != null)
 		{
@@ -827,7 +827,6 @@ public class HighlightManagerTableModel extends AbstractTableModel implements Hi
 	
 	
 	// funa edit start
-	@Override
 	public void reload(){
 		removeAll();
 		if (highlights != null && highlights.exists())

@@ -581,7 +581,12 @@ public class HighlightPlugin extends EditPlugin
 	} //}}}
 	
 	// funa edit
-	public void reload(){
-		highlightManager.reload();
+	public static void reload(){
+		((HighlightManagerTableModel)highlightManager).reload();
+	}
+	
+	// funa edit
+	public static void save(){
+		((HighlightManagerTableModel)highlightManager).save();
 	}
 }
