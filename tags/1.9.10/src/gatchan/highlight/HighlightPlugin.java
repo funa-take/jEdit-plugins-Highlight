@@ -1,24 +1,24 @@
 /*
- * HighlightPlugin.java - The Highlight plugin
- * :tabSize=8:indentSize=8:noTabs=false:
- * :folding=explicit:collapseFolds=1:
- *
- * Copyright (C) 2004, 2011 Matthieu Casanova
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- */
+* HighlightPlugin.java - The Highlight plugin
+* :tabSize=8:indentSize=8:noTabs=false:
+* :folding=explicit:collapseFolds=1:
+*
+* Copyright (C) 2004, 2011 Matthieu Casanova
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
 package gatchan.highlight;
 
 //{{{ Imports
@@ -44,30 +44,30 @@ import java.io.File;
 //}}}
 
 /**
- * The HighlightPlugin. This is my first plugin for jEdit, some parts of my code were inspired by the ErrorList plugin
- *
- * @author Matthieu Casanova
- */
+* The HighlightPlugin. This is my first plugin for jEdit, some parts of my code were inspired by the ErrorList plugin
+*
+* @author Matthieu Casanova
+*/
 public class HighlightPlugin extends EditPlugin
 {
 	private static HighlightManager highlightManager;
-
+	
 	public static final String LAYER_PROPERTY = "plugin.highlight";
 	public static final String NAME = "highlight";
 	public static final String PROPERTY_PREFIX = "plugin.Highlight.";
 	public static final String MENU = "highlight.menu";
 	public static final String OPTION_PREFIX = "options.highlight.";
-
+	
 	private int layer;
 	private float alpha;
 	private boolean highlightOverview;
 	private boolean highlightOverviewSameColor;
 	private Color highlightOverviewColor;
-
+	
 	//{{{ start() method
 	/**
-	 * Initialize the plugin. When starting this plugin will add an Highlighter on each text area
-	 */
+	* Initialize the plugin. When starting this plugin will add an Highlighter on each text area
+	*/
 	@Override
 	public void start()
 	{
@@ -80,37 +80,37 @@ public class HighlightPlugin extends EditPlugin
 		jEdit.visit(new ViewInitializer());
 		EditBus.addToBus(this);
 	} //}}}
-
+	
 	//{{{ stop() method
 	/**
-	 * uninitialize the plugin. we will remove the Highlighter on each text area
-	 */
+	* uninitialize the plugin. we will remove the Highlighter on each text area
+	*/
 	@Override
 	public void stop()
 	{
 		EditBus.removeFromBus(this);
 		jEdit.resetProperty("plugin.gatchan.highlight.HighlightPlugin.activate");
-
+		
 		Buffer[] buffers = jEdit.getBuffers();
 		for (int i = 0; i < buffers.length; i++)
 		{
 			buffers[i].unsetProperty(Highlight.HIGHLIGHTS_BUFFER_PROPS);
 		}
-
+		
 		jEdit.visit(new TextAreaUninitializer());
 		jEdit.visit(new ViewUninitializer());
 		highlightManager.dispose();
 		highlightManager = null;
 	} //}}}
-
+	
 	//{{{ uninitTextArea() method
 	/**
-	 * Remove the highlighter from a text area.
-	 *
-	 * @param textArea the textarea from wich we will remove the highlighter
-	 * @see #stop()
-	 * @see #handleEditPaneUpdate(org.gjt.sp.jedit.msg.EditPaneUpdate) 
-	 */
+	* Remove the highlighter from a text area.
+	*
+	* @param textArea the textarea from wich we will remove the highlighter
+	* @see #stop()
+	* @see #handleEditPaneUpdate(org.gjt.sp.jedit.msg.EditPaneUpdate) 
+	*/
 	private static void uninitTextArea(JEditTextArea textArea)
 	{
 		TextAreaPainter painter = textArea.getPainter();
@@ -130,13 +130,13 @@ public class HighlightPlugin extends EditPlugin
 		removeHighlightOverview(textArea);
 		textArea.removeCaretListener(highlightManager);
 	} //}}}
-
+	
 	//{{{ initTextArea() method
 	/**
-	 * Initialize the textarea with a highlight painter.
-	 *
-	 * @param textArea the textarea to initialize
-	 */
+	* Initialize the textarea with a highlight painter.
+	*
+	* @param textArea the textarea to initialize
+	*/
 	private void initTextArea(JEditTextArea textArea)
 	{
 		Highlighter highlighter = new Highlighter(textArea);
@@ -152,7 +152,7 @@ public class HighlightPlugin extends EditPlugin
 			addHighlightOverview(textArea);
 		textArea.revalidate();
 	} //}}}
-
+	
 	//{{{ addHighlightOverview() method
 	private void addHighlightOverview(JEditTextArea textArea)
 	{
@@ -169,7 +169,7 @@ public class HighlightPlugin extends EditPlugin
 		else
 			currentOverview.setOverviewColor(null);
 	} //}}}
-
+	
 	//{{{ addHighlightOverview() method
 	private static void removeHighlightOverview(JEditTextArea textArea)
 	{
@@ -182,14 +182,14 @@ public class HighlightPlugin extends EditPlugin
 			textArea.revalidate();
 		}
 	} //}}}
-
+	
 	//{{{ initView() method
 	/**
-	 * Initialize the view with a hypersearch results highlighter.
-	 *
-	 * @param view the view whose hypersearch results to initialize
-	 * @return the new highlighter for the hypersearch results of the view
-	 */
+	* Initialize the view with a hypersearch results highlighter.
+	*
+	* @param view the view whose hypersearch results to initialize
+	* @return the new highlighter for the hypersearch results of the view
+	*/
 	private HighlightHypersearchResults initView(View view)
 	{
 		HighlightHypersearchResults highlighter = new HighlightHypersearchResults(view);
@@ -198,25 +198,25 @@ public class HighlightPlugin extends EditPlugin
 			HighlightHypersearchResults.class, highlighter);
 		return highlighter;
 	} //}}}
-
+	
 	//{{{ uninitView() method
 	/**
-	 * Remove the hypersearch results highlighter from the view.
-	 *
-	 * @param view the view whose hypersearch results to initialize
-	 */
+	* Remove the hypersearch results highlighter from the view.
+	*
+	* @param view the view whose hypersearch results to initialize
+	*/
 	private static void uninitView(View view)
 	{
 		HighlightHypersearchResults highlighter = (HighlightHypersearchResults)
-			view.getDockableWindowManager().getClientProperty(
-					HighlightHypersearchResults.class);
+		view.getDockableWindowManager().getClientProperty(
+			HighlightHypersearchResults.class);
 		if (highlighter == null)
 			return;
 		highlighter.stop();
 		view.getDockableWindowManager().putClientProperty(
 			HighlightHypersearchResults.class, null);
 	} //}}}
-
+	
 	//{{{ handleMessage() method
 	@EBHandler
 	public void handlePropertiesChanged(PropertiesChanged propertiesChanged)
@@ -235,32 +235,32 @@ public class HighlightPlugin extends EditPlugin
 			this.layer = layer;
 			this.alpha = alpha;
 			jEdit.visit(new JEditVisitorAdapter()
-			{
-				@Override
-				public void visit(JEditTextArea textArea)
 				{
-					TextAreaPainter painter = textArea.getPainter();
-					Highlighter highlighter = (Highlighter) textArea.getClientProperty(Highlighter.class);
-					highlighter.setAlphaComposite(HighlightPlugin.this.alpha);
-					painter.removeExtension(highlighter);
-					painter.addExtension(HighlightPlugin.this.layer, highlighter);
-					if (highlightOverview)
-						addHighlightOverview(textArea);
-					else
-						removeHighlightOverview(textArea);
-				}
-			});
+					@Override
+					public void visit(JEditTextArea textArea)
+					{
+						TextAreaPainter painter = textArea.getPainter();
+						Highlighter highlighter = (Highlighter) textArea.getClientProperty(Highlighter.class);
+						highlighter.setAlphaComposite(HighlightPlugin.this.alpha);
+						painter.removeExtension(highlighter);
+						painter.addExtension(HighlightPlugin.this.layer, highlighter);
+						if (highlightOverview)
+							addHighlightOverview(textArea);
+						else
+							removeHighlightOverview(textArea);
+					}
+				});
 		}
 		highlightManager.propertiesChanged();
 	} //}}}
-
-
+	
+	
 	@EBHandler
 	public void handleViewUpdate(ViewUpdate vu)
 	{
 		View view = vu.getView();
 		Object what = vu.getWhat();
-
+		
 		if (what == ViewUpdate.CREATED)
 		{
 			initView(view);
@@ -270,14 +270,14 @@ public class HighlightPlugin extends EditPlugin
 			uninitView(view);
 		}
 	}
-
+	
 	//{{{ handleEditPaneMessage() method
 	@EBHandler
 	public void handleEditPaneUpdate(EditPaneUpdate editPaneUpdate)
 	{
 		JEditTextArea textArea = editPaneUpdate.getEditPane().getTextArea();
 		Object what = editPaneUpdate.getWhat();
-
+		
 		if (what == EditPaneUpdate.CREATED)
 		{
 			initTextArea(textArea);
@@ -287,7 +287,7 @@ public class HighlightPlugin extends EditPlugin
 			uninitTextArea(textArea);
 		}
 	} //}}}
-
+	
 	//{{{ handleBufferPaneUpdate() method
 	@EBHandler
 	public void handleBufferPaneUpdate(BufferUpdate bufferUpdate)
@@ -297,7 +297,7 @@ public class HighlightPlugin extends EditPlugin
 			highlightManager.bufferClosed(bufferUpdate.getBuffer());
 		}
 	} //}}}
-
+	
 	//{{{ handleBufferPaneUpdate() method
 	@EBHandler
 	public void handleDockableWindowUpdate(DockableWindowUpdate dockableUpdate)
@@ -315,27 +315,27 @@ public class HighlightPlugin extends EditPlugin
 				highlighter.start();
 		}
 	} //}}}
-
+	
 	//{{{ highlightThis() methods
 	/**
-	 * Highlight a word in a textarea with PERMANENT_SCOPE. If a text is selected this text will be highlighted, if no
-	 * text is selected we will ask the textarea to select a word
-	 *
-	 * @param textArea the textarea
-	 */
+	* Highlight a word in a textarea with PERMANENT_SCOPE. If a text is selected this text will be highlighted, if no
+	* text is selected we will ask the textarea to select a word
+	*
+	* @param textArea the textarea
+	*/
 	public static void highlightThis(JEditTextArea textArea)
 	{
 		highlightThis(textArea, Highlight.PERMANENT_SCOPE);
 	}
-
+	
 	/**
-	 * Highlight a word in a textarea. If a text is selected this text will be highlighted, if no text is selected we will
-	 * ask the textarea to select a word
-	 *
-	 * @param textArea the textarea
-	 * @param scope    the scope {@link Highlight#BUFFER_SCOPE},{@link Highlight#PERMANENT_SCOPE},{@link
-	 *                 Highlight#SESSION_SCOPE}
-	 */
+	* Highlight a word in a textarea. If a text is selected this text will be highlighted, if no text is selected we will
+	* ask the textarea to select a word
+	*
+	* @param textArea the textarea
+	* @param scope    the scope {@link Highlight#BUFFER_SCOPE},{@link Highlight#PERMANENT_SCOPE},{@link
+	*                 Highlight#SESSION_SCOPE}
+	*/
 	public static void highlightThis(JEditTextArea textArea, int scope)
 	{
 		String text = getCurrentWord(textArea);
@@ -348,14 +348,14 @@ public class HighlightPlugin extends EditPlugin
 		}
 		highlightManager.addElement(highlight);
 	} //}}}
-
+	
 	//{{{ getCurrentWord() method
 	/**
-	 * Get the current word. If nothing is selected, it will select it.
-	 *
-	 * @param textArea the textArea
-	 * @return the current word
-	 */
+	* Get the current word. If nothing is selected, it will select it.
+	*
+	* @param textArea the textArea
+	* @return the current word
+	*/
 	private static String getCurrentWord(TextArea textArea)
 	{
 		String text = textArea.getSelectedText();
@@ -366,28 +366,28 @@ public class HighlightPlugin extends EditPlugin
 		}
 		return text;
 	} //}}}
-
+	
 	///{{{ highlightEntireWord() method
 	/**
-	 * Highlight a word in a textarea with PERMANENT_SCOPE. If a text is selected this text will be highlighted, if no
-	 * text is selected we will ask the textarea to select a word. only the entire word will be highlighted
-	 *
-	 * @param textArea the textarea
-	 */
+	* Highlight a word in a textarea with PERMANENT_SCOPE. If a text is selected this text will be highlighted, if no
+	* text is selected we will ask the textarea to select a word. only the entire word will be highlighted
+	*
+	* @param textArea the textarea
+	*/
 	public static void highlightEntireWord(JEditTextArea textArea)
 	{
 		highlightEntireWord(textArea, Highlight.PERMANENT_SCOPE);
 	} //}}}
-
+	
 	//{{{ highlightEntireWord() method
 	/**
-	 * Highlight a word in a textarea. If a text is selected this text will be highlighted, if no text is selected we will
-	 * ask the textarea to select a word. only the entire word will be highlighted
-	 *
-	 * @param textArea the textarea
-	 * @param scope    the scope {@link Highlight#BUFFER_SCOPE},{@link Highlight#PERMANENT_SCOPE},{@link
-	 *                 Highlight#SESSION_SCOPE}
-	 */
+	* Highlight a word in a textarea. If a text is selected this text will be highlighted, if no text is selected we will
+	* ask the textarea to select a word. only the entire word will be highlighted
+	*
+	* @param textArea the textarea
+	* @param scope    the scope {@link Highlight#BUFFER_SCOPE},{@link Highlight#PERMANENT_SCOPE},{@link
+	*                 Highlight#SESSION_SCOPE}
+	*/
 	public static void highlightEntireWord(JEditTextArea textArea, int scope)
 	{
 		String text = getCurrentWord(textArea);
@@ -396,26 +396,26 @@ public class HighlightPlugin extends EditPlugin
 		highlight.setScope(scope);
 		if (scope == Highlight.BUFFER_SCOPE)
 			highlight.setBuffer(textArea.getBuffer());
-
+		
 		highlightManager.addElement(highlight);
 	} //}}}
-
+	
 	//{{{ highlightCurrentSearch() method
 	/**
-	 * Highlight the current search.
-	 */
+	* Highlight the current search.
+	*/
 	public static void highlightCurrentSearch()
 	{
 		highlightCurrentSearch(Highlight.PERMANENT_SCOPE);
 	} //}}}
-
+	
 	//{{{ highlightCurrentSearch() method
 	/**
-	 * Highlight the current serach with scope.
-	 *
-	 * @param scope the scope {@link Highlight#BUFFER_SCOPE},{@link Highlight#PERMANENT_SCOPE},{@link
-	 *              Highlight#SESSION_SCOPE}
-	 */
+	* Highlight the current serach with scope.
+	*
+	* @param scope the scope {@link Highlight#BUFFER_SCOPE},{@link Highlight#PERMANENT_SCOPE},{@link
+	*              Highlight#SESSION_SCOPE}
+	*/
 	public static void highlightCurrentSearch(int scope)
 	{
 		Highlight h = new Highlight();
@@ -425,83 +425,83 @@ public class HighlightPlugin extends EditPlugin
 			h.setBuffer(jEdit.getActiveView().getBuffer());
 		}
 		h.init(SearchAndReplace.getSearchString(),
-		       SearchAndReplace.getRegexp(),
-		       SearchAndReplace.getIgnoreCase(),
-		       Highlight.getNextColor());
+			SearchAndReplace.getRegexp(),
+			SearchAndReplace.getIgnoreCase(),
+			Highlight.getNextColor());
 		addHighlight(h);
 	} //}}}
-
+	
 	//{{{ highlightDialog() method
 	/**
-	 * Show an highlight dialog.
-	 *
-	 * @param view the current view
-	 */
+	* Show an highlight dialog.
+	*
+	* @param view the current view
+	*/
 	public static void highlightDialog(View view, TextArea textArea)
 	{
 		String currentWord = getCurrentWord(textArea);
 		HighlightDialog d = new HighlightDialog(view);
-
+		
 		if (currentWord != null && currentWord.length() != 0)
 		{
 			d.setString(currentWord);
 		}
 		d.setVisible(true);
 	} //}}}
-
+	
 	//{{{ addHighlight() method
 	public static void addHighlight(Highlight highlight)
 	{
 		highlightManager.addElement(highlight);
 	} //}}}
-
+	
 	//{{{ removeAllHighlights() method
 	public static void removeAllHighlights()
 	{
 		highlightManager.removeAll();
 	} //}}}
-
+	
 	//{{{ enableHighlights(= method
 	public static void enableHighlights()
 	{
 		highlightManager.setHighlightEnable(true);
 	} //}}}
-
+	
 	//{{{ disableHighlights() method
 	public static void disableHighlights()
 	{
 		highlightManager.setHighlightEnable(false);
 	} //}}}
-
+	
 	//{{{ toggleHighlights() method
 	public static void toggleHighlights()
 	{
 		highlightManager.setHighlightEnable(!highlightManager.isHighlightEnable());
 	} //}}}
-
+	
 	//{{{ highlightHyperSearchResult() method
 	public static void highlightHyperSearchResult(View view)
 	{
 		
 		HighlightHypersearchResults h = (HighlightHypersearchResults)
-			view.getDockableWindowManager().getClientProperty(
-				HighlightHypersearchResults.class);
+		view.getDockableWindowManager().getClientProperty(
+			HighlightHypersearchResults.class);
 		if (h == null)
 			return;
 		h.start();
 	} //}}}
-
+	
 	//{{{ isHighlightEnable() method
 	public static boolean isHighlightEnable()
 	{
 		return highlightManager.isHighlightEnable();
 	} //}}}
-
+	
 	//{{{ dataMigration() method
 	/**
-	 * Move the files and returns the new saved datas file.
-	 * @return the saved datas file. It can be null
-	 */
+	* Move the files and returns the new saved datas file.
+	* @return the saved datas file. It can be null
+	*/
 	public File dataMigration()
 	{
 		String settingsDirectory = jEdit.getSettingsDirectory();
@@ -512,7 +512,7 @@ public class HighlightPlugin extends EditPlugin
 		String home = new File(file, getClass().getName()).getPath();
 		if (home == null)
 			return null;
-
+		
 		String PROJECT_DIRECTORY = jEdit.getSettingsDirectory() + File.separator + "HighlightPlugin" + File.separator;
 		File projectDirectory = new File(PROJECT_DIRECTORY);
 		File highlights = new File(projectDirectory, "highlights.ser");
@@ -531,7 +531,7 @@ public class HighlightPlugin extends EditPlugin
 			Log.log(Log.ERROR, this, "Unable to write in home folder");
 			return null;
 		}
-
+		
 		File newFile = new File(homeFolder, "highlights.ser");
 		if (highlights.isFile())
 		{
@@ -543,7 +543,7 @@ public class HighlightPlugin extends EditPlugin
 		}
 		return newFile;
 	} //}}}
-
+	
 	//{{{ TextAreaInitializer class
 	private class TextAreaInitializer extends JEditVisitorAdapter
 	{
@@ -552,7 +552,7 @@ public class HighlightPlugin extends EditPlugin
 			initTextArea(textArea);
 		}
 	} //}}}
-
+	
 	//{{{ TextAreaUninitializer class
 	private class TextAreaUninitializer extends JEditVisitorAdapter
 	{
@@ -570,7 +570,7 @@ public class HighlightPlugin extends EditPlugin
 			initView(view);
 		}
 	} //}}}
-
+	
 	//{{{ ViewUninitializer class
 	private class ViewUninitializer extends JEditVisitorAdapter
 	{
@@ -582,11 +582,39 @@ public class HighlightPlugin extends EditPlugin
 	
 	// funa edit
 	public static void reload(){
-		((HighlightManagerTableModel)highlightManager).reload();
+		File file = HighlightSelectFile.getInstance().showSelectDialog();
+		if (file == null){
+			return;
+		}
+		if (file.exists() && file.canRead()){
+			((HighlightManagerTableModel)highlightManager).reload(file);
+			jEdit.getActiveView().getStatus().setMessage("Load : " + file );
+		}
 	}
 	
 	// funa edit
 	public static void save(){
-		((HighlightManagerTableModel)highlightManager).save();
+		File file = HighlightSelectFile.getInstance().showSelectDialog();
+		
+		if (file == null){
+			return;
+		}
+		
+		if (file.exists()){
+			if (!file.canWrite()){
+				return;
+			}
+			
+			String[] args = { file.getName() };
+			int result = GUIUtilities.confirm(jEdit.getActiveView(),
+				"fileexists",args,
+				javax.swing.JOptionPane.YES_NO_OPTION,
+				javax.swing.JOptionPane.WARNING_MESSAGE);
+			if(result != javax.swing.JOptionPane.YES_OPTION)
+				return ;
+		}
+		((HighlightManagerTableModel)highlightManager).save(file);
+		jEdit.getActiveView().getStatus().setMessage("Save : " + file );
+		
 	}
 }

@@ -418,11 +418,11 @@ public class HighlightManagerTableModel extends AbstractTableModel implements Hi
 		timer = null;
 		highlightManagerTableModel = null;
 		selectionHighlight = null;
-		save();
+		save(highlights);
 	} //}}}
 	
 	//{{{ save() method
-	public void save()
+	public void save(File highlights)
 	{
 		if (highlights != null)
 		{
@@ -827,11 +827,11 @@ public class HighlightManagerTableModel extends AbstractTableModel implements Hi
 	
 	
 	// funa edit start
-	public void reload(){
+	public void reload(File file){
 		removeAll();
-		if (highlights != null && highlights.exists())
+		if (file != null && file.exists())
 		{
-			loadFile(highlights);
+			loadFile(file);
 		}
 	}
 	
@@ -873,6 +873,7 @@ public class HighlightManagerTableModel extends AbstractTableModel implements Hi
 			IOUtilities.closeQuietly(reader);
 		}
 	}
+	
 	
 	// funa edit end
 }
