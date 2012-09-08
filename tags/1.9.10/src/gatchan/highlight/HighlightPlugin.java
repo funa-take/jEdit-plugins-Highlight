@@ -582,7 +582,7 @@ public class HighlightPlugin extends EditPlugin
 	
 	// funa edit
 	public static void load(){
-		File file = HighlightSelectFile.getInstance().showSelectDialog();
+		File file = HighlightSelectFile.showDialog();
 		if (file == null){
 			return;
 		}
@@ -594,7 +594,7 @@ public class HighlightPlugin extends EditPlugin
 	
 	// funa edit
 	public static void save(){
-		File file = HighlightSelectFile.getInstance().showSelectDialog();
+		File file = HighlightSelectFile.showSaveDialog();
 		
 		if (file == null){
 			return;
@@ -604,15 +604,8 @@ public class HighlightPlugin extends EditPlugin
 			if (!file.canWrite()){
 				return;
 			}
-			
-			String[] args = { file.getName() };
-			int result = GUIUtilities.confirm(jEdit.getActiveView(),
-				"fileexists",args,
-				javax.swing.JOptionPane.YES_NO_OPTION,
-				javax.swing.JOptionPane.WARNING_MESSAGE);
-			if(result != javax.swing.JOptionPane.YES_OPTION)
-				return ;
 		}
+		
 		((HighlightManagerTableModel)highlightManager).save(file);
 		jEdit.getActiveView().getStatus().setMessage("Save : " + file );
 		

@@ -17,22 +17,33 @@ class HighlightSelectFile {
   private DefaultListModel listModel = null;
   private JTextField tf = null;
   private File selectedFile = null;
+  private boolean isSave = false;
   
-  private static HighlightSelectFile instance  = null;
   
-  public static HighlightSelectFile getInstance(){
-    if (instance == null){
-      instance = new HighlightSelectFile();
-    }
-    return instance;
+  public HighlightSelectFile(boolean isSave){
+    this.isSave = isSave;
+    selectDialog = createDialog();
+  }
+  // private static HighlightSelectFile instance  = null;
+  // 
+  // public static HighlightSelectFile getInstance(){
+  // if (instance == null){
+  // instance = new HighlightSelectFile();
+  // }
+  // return instance;
+  // }
+  
+  public static File showDialog(){
+    return new HighlightSelectFile(false).showSelectDialog();
+  }
+  
+  public static File showSaveDialog(){
+    return new HighlightSelectFile(true).showSelectDialog();
   }
   
   
   public File showSelectDialog(){
     File result = null;
-    if (selectDialog == null){
-      selectDialog = createDialog();
-    }
     
     listModel.clear();
     ArrayList<ListElement> fileList = getHighlightFiles();
@@ -54,7 +65,8 @@ class HighlightSelectFile {
   }
   
   private JDialog createDialog(){
-    JDialog dialog = new JDialog(jEdit.getActiveView(), true);
+    String title = isSave ? "Save" : "Load";
+    JDialog dialog = new JDialog(jEdit.getActiveView(), title, true);
     Container c = dialog.getContentPane();
     c.setLayout(new BorderLayout());
     tf = new JTextField();
@@ -97,6 +109,17 @@ class HighlightSelectFile {
         } else if (!"".equals(inputPath)) {
           selectedFile = new File(getHome(), inputPath);
         }
+        
+        if (isSave && selectedFile.exists()){
+          String[] args = { selectedFile.getName() };
+          int result = GUIUtilities.confirm(jEdit.getActiveView(),
+            "fileexists",args,
+            javax.swing.JOptionPane.YES_NO_OPTION,
+            javax.swing.JOptionPane.WARNING_MESSAGE);
+          if(result != javax.swing.JOptionPane.YES_OPTION)
+            return ;
+        }
+        
         selectDialog.setVisible(false);
         selectDialog.dispose();
       }
