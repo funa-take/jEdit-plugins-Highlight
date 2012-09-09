@@ -45,15 +45,12 @@ class HighlightSelectFile {
   public File showSelectDialog(){
     File result = null;
     
-    listModel.clear();
-    ArrayList<ListElement> fileList = getHighlightFiles();
-    for (ListElement element : fileList){
-      listModel.addElement(element);
-    }
+    reloadList();
     tf.setText("");
     tf.requestFocus();
     if (listModel.getSize() > 0){
       list.setSelectedIndex(0);
+      list.ensureIndexIsVisible(0);
     }
     selectedFile = null;
     selectDialog.pack();
@@ -62,6 +59,14 @@ class HighlightSelectFile {
     
     result = selectedFile;
     return result;
+  }
+  
+  private void reloadList(){
+    listModel.clear();
+    ArrayList<ListElement> fileList = getHighlightFiles();
+    for (ListElement element : fileList){
+      listModel.addElement(element);
+    }
   }
   
   private JDialog createDialog(){
@@ -74,9 +79,12 @@ class HighlightSelectFile {
     listModel = new DefaultListModel();
     list = new JList(listModel);
     c.add(new JScrollPane(list), BorderLayout.CENTER);
-    list.setSelectedIndex(ListSelectionModel.SINGLE_SELECTION );
+    list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION );
     
-    Action nextAction = new AbstractAction("next"){
+    JButton delButton = new JButton("DEL");
+    c.add(delButton, BorderLayout.SOUTH);
+    
+    Action nextAction = new AbstractAction("nextHighlight"){
       public void actionPerformed(ActionEvent e){
         int count = listModel.getSize();
         if (count < 1){
@@ -86,9 +94,10 @@ class HighlightSelectFile {
         int index = list.getSelectedIndex();
         index = (index + 1) % count;
         list.setSelectedIndex(index);
+        list.ensureIndexIsVisible(index);
       }
     };
-    Action prevAction = new AbstractAction("prev"){
+    Action prevAction = new AbstractAction("prevHighlight"){
       public void actionPerformed(ActionEvent e){
         int count = listModel.getSize();
         if (count < 1){
@@ -99,9 +108,10 @@ class HighlightSelectFile {
         index += count;
         index = (index - 1) % count;
         list.setSelectedIndex(index);
+        list.ensureIndexIsVisible(index);
       }
     };
-    final Action selectAction = new AbstractAction("select"){
+    final Action selectAction = new AbstractAction("selectHighlight"){
       public void actionPerformed(ActionEvent e){
         String inputPath = tf.getText().trim();
         File file = null;
@@ -125,11 +135,47 @@ class HighlightSelectFile {
         selectDialog.dispose();
       }
     };
-    
     Action hideAction = new AbstractAction("hide"){
       public void actionPerformed(ActionEvent e){
         selectDialog.setVisible(false);
         selectDialog.dispose();
+      }
+    };
+    Action delAction = new AbstractAction("delHighlight"){
+      public void actionPerformed(ActionEvent e){
+        String inputPath = tf.getText().trim();
+        File file = null;
+        if (list.getSelectedIndex() >= 0){
+          file = ((ListElement)list.getSelectedValue()).file;
+        } else if (!"".equals(inputPath)) {
+          file = new File(getHome(), inputPath);
+        }
+        
+        if (file.exists() && file.canWrite()){
+          String[] args = { file.getName(),"files" };
+          int result = GUIUtilities.confirm(jEdit.getActiveView(),
+            "vfs.browser.delete-confirm",args,
+            javax.swing.JOptionPane.YES_NO_OPTION,
+            javax.swing.JOptionPane.WARNING_MESSAGE);
+          if(result != javax.swing.JOptionPane.YES_OPTION)
+            return ;
+          
+          int selIndex = list.getSelectedIndex();
+          file.delete();
+          listModel.clear();
+          ArrayList<ListElement> fileList = getHighlightFiles();
+          for (ListElement element : fileList){
+            listModel.addElement(element);
+          }
+          
+          
+          if (selIndex >= listModel.getSize()){
+            selIndex = listModel.getSize()-1;
+          }
+          list.setSelectedIndex(selIndex);
+          list.ensureIndexIsVisible(selIndex);
+          tf.requestFocus();
+        }
       }
     };
     
@@ -139,6 +185,8 @@ class HighlightSelectFile {
     KeyStroke altiKeystroke = KeyStroke.getKeyStroke("alt I");
     KeyStroke altkKeystroke = KeyStroke.getKeyStroke("alt K");
     KeyStroke althKeystroke = KeyStroke.getKeyStroke("alt H");
+    KeyStroke alt0Keystroke = KeyStroke.getKeyStroke("alt 0");
+    KeyStroke altdelKeystroke = KeyStroke.getKeyStroke("alt DELETE");
     
     InputMap inputmap = tf.getInputMap(JTextField.WHEN_IN_FOCUSED_WINDOW);
     inputmap.put(downKeystroke, nextAction.getValue("Name"));
@@ -147,11 +195,14 @@ class HighlightSelectFile {
     inputmap.put(altkKeystroke, nextAction.getValue("Name"));
     inputmap.put(altiKeystroke, prevAction.getValue("Name"));
     inputmap.put(althKeystroke, hideAction.getValue("Name"));
+    inputmap.put(alt0Keystroke, delAction.getValue("Name"));
+    inputmap.put(altdelKeystroke, delAction.getValue("Name"));
     
     ActionMap actionmap = tf.getActionMap();
     actionmap.put(nextAction.getValue("Name"), nextAction);
     actionmap.put(prevAction.getValue("Name"), prevAction);
     actionmap.put(hideAction.getValue("Name"), hideAction);
+    actionmap.put(delAction.getValue("Name"),  delAction);
     
     tf.addActionListener(selectAction);
     
@@ -160,6 +211,9 @@ class HighlightSelectFile {
           if ((e.getModifiers() & KeyEvent.ALT_MASK) != 0){
             return;
           }
+          // if ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0){
+            // return;
+          // }
           list.getSelectionModel().clearSelection();
         }
     });
@@ -174,7 +228,7 @@ class HighlightSelectFile {
           }
         }
       });
-    
+    delButton.addActionListener(delAction);
     return dialog;
   }
   
