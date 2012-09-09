@@ -104,14 +104,15 @@ class HighlightSelectFile {
     final Action selectAction = new AbstractAction("select"){
       public void actionPerformed(ActionEvent e){
         String inputPath = tf.getText().trim();
+        File file = null;
         if (list.getSelectedIndex() >= 0){
-          selectedFile = ((ListElement)list.getSelectedValue()).file;
+          file = ((ListElement)list.getSelectedValue()).file;
         } else if (!"".equals(inputPath)) {
-          selectedFile = new File(getHome(), inputPath);
+          file = new File(getHome(), inputPath);
         }
         
-        if (isSave && selectedFile.exists()){
-          String[] args = { selectedFile.getName() };
+        if (isSave && file.exists()){
+          String[] args = { file.getName() };
           int result = GUIUtilities.confirm(jEdit.getActiveView(),
             "fileexists",args,
             javax.swing.JOptionPane.YES_NO_OPTION,
@@ -119,7 +120,7 @@ class HighlightSelectFile {
           if(result != javax.swing.JOptionPane.YES_OPTION)
             return ;
         }
-        
+        selectedFile = file;
         selectDialog.setVisible(false);
         selectDialog.dispose();
       }
