@@ -28,6 +28,9 @@ plugin.gatchan.highlight.HighlightPlugin.menu=\
                                                 gatchan-disableHighlights \
                                                 gatchan-toggleHighlights \
                                                 - \
+                                                gatchan-loadHighlights \
+                                                gatchan-saveHighlights \
+                                                - \
                                                 highlighter-panel
 
 gatchan-highlight.label=Highlight
@@ -45,6 +48,8 @@ gatchan-removeAllHighlights.label=Remove all
 gatchan-enableHighlights.label=Enable highlights
 gatchan-disableHighlights.label=Disable highlights
 gatchan-toggleHighlights.label=Toggle highlights on/off
+gatchan-loadHighlights.label=Load highlights
+gatchan-saveHighlights.label=Save highlights
 
 highlighter-panel.title=Highlighter
 highlighter-panel.label=Highlighter panel
