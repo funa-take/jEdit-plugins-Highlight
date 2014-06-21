@@ -64,8 +64,13 @@ public class FlexColorPainter extends TextAreaExtension
 	public void paintValidLine(Graphics2D gfx, int screenLine, int physicalLine, int start, int end, int y)
 	{
 		JEditBuffer buffer = textArea.getBuffer();
-		int lineStartOffset = buffer.getLineStartOffset(physicalLine);
-		int lineEndOffset = buffer.getLineEndOffset(physicalLine);
+		// edit Funa
+		// int lineStartOffset = buffer.getLineStartOffset(physicalLine);
+		// int lineEndOffset = buffer.getLineEndOffset(physicalLine);
+		int lineStartOffset = textArea.getScreenLineStartOffset(screenLine);
+		int lineEndOffset = textArea.getScreenLineEndOffset(screenLine);
+		
+		
 		int length = Math.min(lineEndOffset - lineStartOffset - 1, MAX_LINE_LENGTH);
 		if (length == 0)
 			return;
