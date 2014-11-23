@@ -339,18 +339,30 @@ public class HighlightPlugin extends EditPlugin
 	 * @param scope    the scope {@link Highlight#BUFFER_SCOPE},{@link Highlight#PERMANENT_SCOPE},{@link
 	 *                 Highlight#SESSION_SCOPE}
 	 */
+	 // edit funa start
 	public static void highlightThis(JEditTextArea textArea, int scope)
+	{
+		highlightThis(textArea, true, scope);
+	}
+	
+	public static void highlightThis(JEditTextArea textArea, boolean ignoreCase)
+	{
+		highlightThis(textArea, ignoreCase, Highlight.PERMANENT_SCOPE);
+	}
+	
+	public static void highlightThis(JEditTextArea textArea, boolean ignoreCase, int scope )
 	{
 		String text = getCurrentWord(textArea);
 		if (text == null) return;
-		Highlight highlight = new Highlight(text);
-		highlight.setScope(scope);
+		Highlight highlight = new Highlight(text, false, ignoreCase, scope);
 		if (scope == Highlight.BUFFER_SCOPE)
 		{
 			highlight.setBuffer(textArea.getBuffer());
 		}
 		highlightManager.addElement(highlight);
-	} //}}}
+	}
+	//  edit funa end
+	//}}}
 
 	//{{{ getCurrentWord() method
 	/**

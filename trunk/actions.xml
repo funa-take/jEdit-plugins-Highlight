@@ -3,6 +3,12 @@
 	<ACTION NAME="gatchan-highlight">
 		<CODE>
 			textArea.requestFocus();
+			gatchan.highlight.HighlightPlugin.highlightThis(textArea, false);
+		</CODE>
+	</ACTION>
+	<ACTION NAME="gatchan-highlight-ignoreCase">
+		<CODE>
+			textArea.requestFocus();
 			gatchan.highlight.HighlightPlugin.highlightThis(textArea);
 		</CODE>
 	</ACTION>

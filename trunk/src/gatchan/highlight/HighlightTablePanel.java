@@ -73,7 +73,9 @@ public class HighlightTablePanel extends JPanel
 	{
 		super(new GridBagLayout());
 		permanentScopeColor = getBackground();
-		ignoreCase.setSelected(true);
+		// ignoreCase.setSelected(true);
+		// edit funa
+		ignoreCase.setSelected(false);
 		GridBagConstraints cons = new GridBagConstraints();
 		cons.gridy = 0;
 

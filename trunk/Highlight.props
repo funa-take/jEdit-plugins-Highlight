@@ -13,6 +13,7 @@ plugin.gatchan.highlight.HighlightPlugin.menu=\
                                                 gatchan-highlight-dialog \
                                                 - \
                                                 gatchan-highlight \
+                                                gatchan-highlight-ignoreCase \
                                                 gatchan-highlight-session \
                                                 gatchan-highlight-buffer \
                                                 gatchan-highlight-entireword \
@@ -34,6 +35,7 @@ plugin.gatchan.highlight.HighlightPlugin.menu=\
                                                 highlighter-panel
 
 gatchan-highlight.label=Highlight
+gatchan-highlight-ignoreCase.label=Highlight (ignore case)
 gatchan-highlight-session.label=Highlight (session scope)
 gatchan-highlight-buffer.label=Highlight (buffer scope)
 gatchan-highlight-entireword.label=Highlight entire word

@@ -1,3 +1,6 @@
+›2014/11/23
+  •W€‚Å ignore case ‚ª false ‚É‚È‚é‚æ‚¤‚ÉC³
+  
 ›2014/06/21
   #AAAAAA ‚È‚Ç‚ª softwrap ‚É‘Î‰ž‚µ‚Ä‚¢‚È‚¢‚Ì‚ÅC³
 
