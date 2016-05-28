@@ -97,4 +97,14 @@
 			gatchan.highlight.HighlightPlugin.highlightHyperSearchResult(view);
 		</CODE>
 	</ACTION>
+	<ACTION NAME="gatchan-loadHighlights">
+		<CODE>
+			gatchan.highlight.HighlightPlugin.load();
+		</CODE>
+	</ACTION>
+	<ACTION NAME="gatchan-saveHighlights">
+		<CODE>
+			gatchan.highlight.HighlightPlugin.save();
+		</CODE>
+	</ACTION>
 </ACTIONS>

@@ -582,4 +582,35 @@ public class HighlightPlugin extends EditPlugin
 			uninitView(view);
 		}
 	} //}}}
+	
+	// funa edit
+	public static void load(){
+		File file = HighlightSelectFile.showDialog();
+		if (file == null){
+			return;
+}
+		if (file.exists() && file.canRead()){
+			((HighlightManagerTableModel)highlightManager).load(file);
+			jEdit.getActiveView().getStatus().setMessage("Load : " + file );
+		}
+	}
+	
+	// funa edit
+	public static void save(){
+		File file = HighlightSelectFile.showSaveDialog();
+		
+		if (file == null){
+			return;
+		}
+		
+		if (file.exists()){
+			if (!file.canWrite()){
+				return;
+			}
+		}
+		
+		((HighlightManagerTableModel)highlightManager).save(file);
+		jEdit.getActiveView().getStatus().setMessage("Save : " + file );
+		
+	}
 }
