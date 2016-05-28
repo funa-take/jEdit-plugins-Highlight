@@ -118,5 +118,4 @@ public interface HighlightManager extends CaretListener
     //{{{ isHighlightSelection() method
     boolean isHighlightSelection() //}}}
             ;
-            
 }

@@ -339,30 +339,18 @@ public class HighlightPlugin extends EditPlugin
 	 * @param scope    the scope {@link Highlight#BUFFER_SCOPE},{@link Highlight#PERMANENT_SCOPE},{@link
 	 *                 Highlight#SESSION_SCOPE}
 	 */
-	 // edit funa start
 	public static void highlightThis(JEditTextArea textArea, int scope)
-	{
-		highlightThis(textArea, true, scope);
-	}
-	
-	public static void highlightThis(JEditTextArea textArea, boolean ignoreCase)
-	{
-		highlightThis(textArea, ignoreCase, Highlight.PERMANENT_SCOPE);
-	}
-	
-	public static void highlightThis(JEditTextArea textArea, boolean ignoreCase, int scope )
 	{
 		String text = getCurrentWord(textArea);
 		if (text == null) return;
-		Highlight highlight = new Highlight(text, false, ignoreCase, scope);
+		Highlight highlight = new Highlight(text);
+		highlight.setScope(scope);
 		if (scope == Highlight.BUFFER_SCOPE)
 		{
 			highlight.setBuffer(textArea.getBuffer());
 		}
 		highlightManager.addElement(highlight);
-	}
-	//  edit funa end
-	//}}}
+	} //}}}
 
 	//{{{ getCurrentWord() method
 	/**
@@ -594,35 +582,4 @@ public class HighlightPlugin extends EditPlugin
 			uninitView(view);
 		}
 	} //}}}
-	
-	// funa edit
-	public static void load(){
-		File file = HighlightSelectFile.showDialog();
-		if (file == null){
-			return;
-}
-		if (file.exists() && file.canRead()){
-			((HighlightManagerTableModel)highlightManager).load(file);
-			jEdit.getActiveView().getStatus().setMessage("Load : " + file );
-		}
-	}
-	
-	// funa edit
-	public static void save(){
-		File file = HighlightSelectFile.showSaveDialog();
-		
-		if (file == null){
-			return;
-		}
-		
-		if (file.exists()){
-			if (!file.canWrite()){
-				return;
-			}
-		}
-		
-		((HighlightManagerTableModel)highlightManager).save(file);
-		jEdit.getActiveView().getStatus().setMessage("Save : " + file );
-		
-	}
 }
