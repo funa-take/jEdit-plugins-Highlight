@@ -3,6 +3,7 @@
 
 package gatchan.highlight;
 
+import org.gjt.sp.jedit.gui.KeyEventTranslator;
 import org.gjt.sp.jedit.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -182,11 +183,26 @@ class HighlightSelectFile {
     KeyStroke escKeystroke = KeyStroke.getKeyStroke("ESCAPE");
     KeyStroke upKeystroke = KeyStroke.getKeyStroke("UP");
     KeyStroke downKeystroke = KeyStroke.getKeyStroke("DOWN");
-    KeyStroke altiKeystroke = KeyStroke.getKeyStroke("alt I");
-    KeyStroke altkKeystroke = KeyStroke.getKeyStroke("alt K");
-    KeyStroke althKeystroke = KeyStroke.getKeyStroke("alt H");
-    KeyStroke alt0Keystroke = KeyStroke.getKeyStroke("alt 0");
-    KeyStroke altdelKeystroke = KeyStroke.getKeyStroke("alt DELETE");
+    // KeyStroke altiKeystroke = KeyStroke.getKeyStroke("alt I");
+    KeyStroke altiKeystroke = KeyStroke.getKeyStroke(
+      KeyEvent.VK_I,
+      KeyEventTranslator.getModifierBeforeTranslate(KeyEvent.ALT_MASK));
+    // KeyStroke altkKeystroke = KeyStroke.getKeyStroke("alt K");
+    KeyStroke altkKeystroke = KeyStroke.getKeyStroke(
+      KeyEvent.VK_K,
+      KeyEventTranslator.getModifierBeforeTranslate(KeyEvent.ALT_MASK));
+    // KeyStroke althKeystroke = KeyStroke.getKeyStroke("alt H");
+    KeyStroke althKeystroke = KeyStroke.getKeyStroke(
+      KeyEvent.VK_H,
+      KeyEventTranslator.getModifierBeforeTranslate(KeyEvent.ALT_MASK));
+    // KeyStroke alt0Keystroke = KeyStroke.getKeyStroke("alt 0");
+    KeyStroke alt0Keystroke = KeyStroke.getKeyStroke(
+      KeyEvent.VK_0,
+      KeyEventTranslator.getModifierBeforeTranslate(KeyEvent.ALT_MASK));
+    // KeyStroke altdelKeystroke = KeyStroke.getKeyStroke("alt DELETE");
+    KeyStroke altdelKeystroke = KeyStroke.getKeyStroke(
+      KeyEvent.VK_DELETE,
+      KeyEventTranslator.getModifierBeforeTranslate(KeyEvent.ALT_MASK));
     
     InputMap inputmap = tf.getInputMap(JTextField.WHEN_IN_FOCUSED_WINDOW);
     inputmap.put(downKeystroke, nextAction.getValue("Name"));
@@ -208,11 +224,11 @@ class HighlightSelectFile {
     
     tf.addKeyListener(new KeyAdapter(){
         public void keyTyped(KeyEvent e){
-          if ((e.getModifiers() & KeyEvent.ALT_MASK) != 0){
+          if ((KeyEventTranslator.translateModifiers(e.getModifiers()) & KeyEvent.ALT_MASK) != 0){
             return;
           }
           // if ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0){
-            // return;
+          // return;
           // }
           list.getSelectionModel().clearSelection();
         }
