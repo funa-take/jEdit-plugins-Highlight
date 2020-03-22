@@ -107,4 +107,12 @@
 			gatchan.highlight.HighlightPlugin.save();
 		</CODE>
 	</ACTION>
+	<ACTION NAME="gatchan-toggleHighlightOverview">
+		<CODE>
+			gatchan.highlight.HighlightPlugin.toggleHighlightOverview();
+		</CODE>
+		<IS_SELECTED>
+			return (jEdit.getBooleanProperty(gatchan.highlight.HighlightOptionPane.PROP_HIGHLIGHT_OVERVIEW));
+		</IS_SELECTED>
+	</ACTION>
 </ACTIONS>

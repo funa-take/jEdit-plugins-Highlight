@@ -1,3 +1,7 @@
+○2020/03/22
+  highlight overviewのショートカットを追加
+  
+
 ○2016/05/29
   2.2 対応
   ダイアログで ignore caseをデフォルトでfalseに設定

@@ -150,6 +150,14 @@ public class HighlightPlugin extends EditPlugin
 	} //}}}
 
 	//{{{ addHighlightOverview() method
+	public static void toggleHighlightOverview() {
+		HighlightPlugin plugin = (HighlightPlugin)jEdit.getPlugin("gatchan.highlight.HighlightPlugin");
+		boolean propOverview = jEdit.getBooleanProperty(HighlightOptionPane.PROP_HIGHLIGHT_OVERVIEW);
+		jEdit.setBooleanProperty(HighlightOptionPane.PROP_HIGHLIGHT_OVERVIEW, !propOverview);
+		// plugin.handlePropertiesChanged(null);
+		jEdit.propertiesChanged();
+	}
+	
 	private void addHighlightOverview(JEditTextArea textArea)
 	{
 		HighlightOverview currentOverview = (HighlightOverview) textArea.getClientProperty(HighlightOverview.class);
